@@ -7,6 +7,7 @@ import dlib
 #face_utils for basic operations of conversion
 from imutils import face_utils
 import datetime
+import time
 
 
 #Initializing the camera and taking the instance
@@ -17,10 +18,10 @@ detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 #status marking for current state
-
-blink1=0
+flag= 0
 color=(0,0,0)
-
+blink_count=0
+blink1=0
 sleep_count = 0
 max_sleep_count = 5
 
@@ -100,7 +101,8 @@ while True:
             if(normal_eye_ratio-eye_avg_ratio>0.5):
                 sleep_count = sleep_count+1
                 GPA=sleep_count/10
-
+                
+                
                 if(sleep_count>max_sleep_count):
                      now = datetime.datetime.now()
                      CurrentTime= now.strftime("%Y-%m-%d %H:%M:%S")
@@ -115,10 +117,18 @@ while True:
         
         #Now judge what to do for the eye blinks
         if left_blink<0.2 and right_blink<0.2:
-                blink1+=1
+            blink1+=1
+            if flag ==0:
+                    blink_count+=1
+                    flag=1
+        else: 
+            flag=0
+               
+                
             
 
-        cv2.putText(frame, str(blink1), (70,150), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
+        cv2.putText(frame,"" +str(blink_count), (70,150), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
+        cv2.putText(frame,"" +str(blink1), (70,400), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
         for n in range(0, 68):
             (x,y) = landmarks[n]
             cv2.circle(frame, (x, y), 1, (255, 255, 255), -1)
