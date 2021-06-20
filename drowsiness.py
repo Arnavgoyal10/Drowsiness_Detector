@@ -17,8 +17,7 @@ color=(0,0,0)
 blink_count=0
 #for how many frames were the eyes closed
 blink1=0
-sleep_count = 0
-max_sleep_count = 5
+
 
 normal = False
 normal_count = 0.0
@@ -89,8 +88,8 @@ while True:
             flag=0
                
                 
-        cv2.putText(frame,"The number of frames with closed eyes is " +str(blink_count), (70,150), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
-        cv2.putText(frame,"The number of times blinked is " +str(blink1), (70,400), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
+        cv2.putText(frame,"The number of frames with closed eyes is " +str(blink1), (70,150), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
+        cv2.putText(frame,"The number of times blinked is " +str(blink_count), (70,400), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
         for n in range(0, 68):
             (x,y) = landmarks[n]
             cv2.circle(frame, (x, y), 1, (255, 255, 255), -1)
