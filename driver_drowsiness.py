@@ -6,6 +6,7 @@ import numpy as np
 import dlib
 #face_utils for basic operations of conversion
 from imutils import face_utils
+import datetime
 
 
 #Initializing the camera and taking the instance
@@ -31,7 +32,11 @@ _, frame = cap.read()
 img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
  # insert information text to video frame
 font = cv2.FONT_HERSHEY_SIMPLEX
-	
+
+
+now = datetime.datetime.now()
+CurrentTime= now.strftime("%Y-%m-%d %H:%M:%d")
+cv2.putText(frame, "Sleep Detector: " + str(CurrentTime), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0xFF, 0xFF, 0xFF0), 2)
 def compute(ptA,ptB):
 	dist = np.linalg.norm(ptA - ptB)
 	return dist
@@ -47,7 +52,22 @@ while True:
     _, frame = cap.read()
     img = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = detector(img)
+    if(not(normal) and normal_count<47):
+
+ # insert information text to video frame
     
+        cv2.rectangle(img, (1, 50), (50, 80), (180, 132, 109), -1)
+        cv2.putText(
+            img,
+            'ATTENTION PLEASE - Your activities are being logged',
+            (60, 70),
+            font,
+            0.5,
+            (0xFF, 0xFF, 0xFF),
+            1,
+            cv2.FONT_HERSHEY_SIMPLEX,
+            )
+
     #detected face in faces array
     for face in faces:
         x1 = face.left()
@@ -70,32 +90,33 @@ while True:
             else:
                 normal_eye_ratio = normal_eye_ratio/normal_count
                 normal = True
+                cv2.putText(frame, "Sleep Detector: " + str(CurrentTime), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0xFF, 0xFF, 0xFF0), 2)
  			    #cv2.putText(frame, "LETS START!", (140, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (150, 0, 255), 3)
                # print(normal_eye_ratio)
             normal_count=normal_count+1        
         
    
         else:  
-            if(normal_eye_ratio-eye_avg_ratio>0.1):
+            if(normal_eye_ratio-eye_avg_ratio>0.5):
                 sleep_count = sleep_count+1
-                GPA=sleep_count/20
-                
+                GPA=sleep_count/10
+
                 if(sleep_count>max_sleep_count):
-                     blink1+=1	
-                     cv2.putText(frame, "Sleeping time (seconds):" + str("%6.0f" % GPA), (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0xFF, 0xFF, 0xFF0), 2)
+                     now = datetime.datetime.now()
+                     CurrentTime= now.strftime("%Y-%m-%d %H:%M:%S")
+                     cv2.putText(frame, "Sleep Detector: " + str(CurrentTime), (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0xFF, 0xFF, 0xFF0), 2)
+                     cv2.putText(frame, "Sleeping time (seconds):" + str("%6.0f " % GPA), (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0xFF, 0xFF, 0xFF0), 2)
                 if ((GPA > 2) and (GPA < 5)):
-                     blink1+=1	
                      cv2.putText(frame, "Alert! You should take a rest", (10, 230), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-                else:
-                     blink1+=1
                 #print("Sleeping log - Time: " + str(CurrentTime) + " Duration: " + str("%6.0f" % GPA))
             else:
                 sleep_count = 0
 
         
         #Now judge what to do for the eye blinks
-        
-
+        if left_blink<0.2 and right_blink<0.2:
+                blink1+=1
+            
 
         cv2.putText(frame, str(blink1), (70,150), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
         for n in range(0, 68):
