@@ -127,8 +127,8 @@ while True:
                 
             
 
-        cv2.putText(frame,"" +str(blink_count), (70,150), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
-        cv2.putText(frame,"" +str(blink1), (70,400), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
+        cv2.putText(frame,"The number of frames with closed eyes is " +str(blink_count), (70,150), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
+        cv2.putText(frame,"The number of times blinked is " +str(blink1), (70,400), cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
         for n in range(0, 68):
             (x,y) = landmarks[n]
             cv2.circle(frame, (x, y), 1, (255, 255, 255), -1)
